@@ -4,17 +4,17 @@ A Doubler actor D receives a number n, and uses n Incrementer (I1, I2, ... , In)
 
 Here is how it works:
 - an actor A sends a message to D with an Integer n
-- D creates n Incrementers (I1, I2, ... , In)
+- D creates n Incrementers (I_1, I_2, ... , I_n)
 - each Incrementer has a "next" actor, to which it will send the result of its computation
--- the next of In is A
--- the next of I(n-1) is In
--- ...
--- the next of I1 is I2
-- D sends n to I1
-- I1 sends n+1 to I2
-- I2 sends n+2 to I3
+ - the next of I_n is A
+ - the next of I_(n-1) is In
+ - ...
+ - the next of I_1 is I_2
+- D sends n to I_1
+- I_1 sends n+1 to I_2
+- I_2 sends n+2 to I_3
 - ...
-- In sends n+n to A
+- I_n sends n+n to A
 
 Note: D knows that there m machines in the system (m akka nodes), and so it uses all of them by creating Incrementer on every node.
-Incrementer Ii is created on node (i - 1) % nodes.size();
+Incrementer I_i is created on node (i - 1) % nodes.size();

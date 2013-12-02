@@ -1,5 +1,5 @@
 bin/
-project/
+project/target/
 target/
 lib_managed/
 .cache

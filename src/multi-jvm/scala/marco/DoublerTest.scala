@@ -18,10 +18,10 @@ object DoublerTestConfig extends MultiNodeConfig {
   commonConfig(ConfigFactory.parseMap(Map(
     "akka.loggers" -> List("akka.event.slf4j.Slf4jLogger").asJava,
     "akka.loglevel" -> "DEBUG",
-//    "akka.log-dead-letters" -> 50,
-//    "akka.log-dead-letters-during-shutdown" -> "off",
-//    "akka.remote.log-sent-messages" -> "on",
-//    "akka.remote.log-received-messages" -> "on",
+    //    "akka.log-dead-letters" -> 50,
+    //    "akka.log-dead-letters-during-shutdown" -> "off",
+    //    "akka.remote.log-sent-messages" -> "on",
+    //    "akka.remote.log-received-messages" -> "on",
     "akka.actor.provider" -> "akka.remote.RemoteActorRefProvider",
     "akka.remote.netty.tcp.hostname" -> "localhost").asJava))
   // define nodes
@@ -70,6 +70,7 @@ class DoublerTest extends MultiNodeSpec(DoublerTestConfig) with ScalaTestMultiNo
       doubler ! input
       val output = expectMsg(2 minutes, 2 * input)
       log.info("got {}", output)
+      system.stop(doubler)
       enterBarrier("output on " + node(node1) + " for " + input)
       enterBarrier("output on " + node(node2) + " for " + input)
       enterBarrier("output on " + node(node3) + " for " + input)
@@ -85,6 +86,7 @@ class DoublerTest extends MultiNodeSpec(DoublerTestConfig) with ScalaTestMultiNo
       doubler ! input
       val output = expectMsg(2 minutes, 2 * input)
       log.info("got {}", output)
+      system.stop(doubler)
       enterBarrier("output on " + node(node2) + " for " + input)
       enterBarrier("output on " + node(node3) + " for " + input)
     }
@@ -100,6 +102,7 @@ class DoublerTest extends MultiNodeSpec(DoublerTestConfig) with ScalaTestMultiNo
       doubler ! input
       val output = expectMsg(2 minutes, 2 * input)
       log.info("got {}", output)
+      system.stop(doubler)
       enterBarrier("output on " + node(node3) + " for " + input)
     }
 

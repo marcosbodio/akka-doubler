@@ -24,6 +24,7 @@ public class Doubler extends UntypedActor {
 	}
 
 	public Doubler(List<Address> nodes) {
+		if (nodes.size() < 1) throw new IllegalStateException("I need a list of at least one node!");
 		this.nodes = nodes;
 	}
 
@@ -32,24 +33,17 @@ public class Doubler extends UntypedActor {
 		if (log.isDebugEnabled()) log.debug("{} {} received {} from {}", actorName, getSelf(), message, getSender());
 		if (message instanceof Integer) {
 			Integer input = (Integer) message;
-			ActorRef requester = getSender();
-			ActorRef first = buildIncrementers(input, requester);
-			first.tell(input, getSelf());
-			if (log.isDebugEnabled()) log.debug("{} sent {} to {}", getSelf(), input, first);
+			DoublerApi.Computation nextComputation = new DoublerApi.Computation(input + 1, input - 1);
+			ActorRef target = getSender();
+			int nextNodeIndex = 0;
+			ActorRef next = getContext().actorOf(
+					Incrementer.mkProps(target, nodes, (nextNodeIndex + 1) % nodes.size()).withDeploy(
+							new Deploy(new RemoteScope(nodes.get(nextNodeIndex)))),
+					Incrementer.actorName + "-" + nextComputation.getSteps());
+			next.tell(nextComputation, getSelf());
+			if (log.isDebugEnabled()) log.debug("{} sent {} to {}", getSelf(), nextComputation, next);
 		} else unhandled(message);
 
-	}
-
-	private ActorRef buildIncrementers(Integer input, ActorRef requester) {
-		ActorRef next = requester;
-		for (int i = input; i > 0; i--) {
-			int nodeIndex = (i - 1) % nodes.size();
-			ActorRef incrementer = getContext().actorOf(
-					Incrementer.mkProps(next).withDeploy(new Deploy(new RemoteScope(nodes.get(nodeIndex)))),
-					Incrementer.actorName + "-" + i);
-			next = incrementer;
-		}
-		return next;
 	}
 
 }

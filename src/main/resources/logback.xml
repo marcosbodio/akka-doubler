@@ -2,19 +2,21 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%X{akkaTimestamp} %-5level [%X{sourceThread}] [%logger{36}] [%X{akkaSource}] - %msg%n%n</pattern>
+			<pattern>%X{akkaTimestamp} %-5level [%X{sourceThread}] [%logger{36}] [%X{akkaSource}] - %msg%n</pattern>
 		</encoder>
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>akka-doubler.log</file>
 		<encoder>
-			<pattern>%X{akkaTimestamp} %-5level [%X{sourceThread}] [%logger{36}] [%X{akkaSource}] - %msg%n%n</pattern>
+			<pattern>%X{akkaTimestamp} %-5level [%X{sourceThread}] [%logger{36}] [%X{akkaSource}] - %msg%n</pattern>
 		</encoder>
 	</appender>
 
-	<root level="DEBUG">
+	<logger name="marco" level="DEBUG" />
+
+	<root level="ERROR">
 		<appender-ref ref="FILE" />
-		<appender-ref ref="STDOUT" />
+<!-- 		<appender-ref ref="STDOUT" /> -->
 	</root>
 </configuration>

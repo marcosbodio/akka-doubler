@@ -3,9 +3,7 @@ package marco
 import scala.collection.JavaConverters.mapAsJavaMapConverter
 import scala.collection.JavaConverters.seqAsJavaListConverter
 import scala.concurrent.duration.DurationInt
-
 import com.typesafe.config.ConfigFactory
-
 import akka.remote.testkit.MultiNodeConfig
 import akka.remote.testkit.MultiNodeSpec
 import akka.testkit.ImplicitSender
@@ -20,10 +18,10 @@ object DoublerTestConfig extends MultiNodeConfig {
   commonConfig(ConfigFactory.parseMap(Map(
     "akka.loggers" -> List("akka.event.slf4j.Slf4jLogger").asJava,
     "akka.loglevel" -> "DEBUG",
-    "akka.log-dead-letters" -> 50,
-    "akka.log-dead-letters-during-shutdown" -> "off",
-    "akka.remote.log-sent-messages" -> "on",
-    "akka.remote.log-received-messages" -> "on",
+//    "akka.log-dead-letters" -> 50,
+//    "akka.log-dead-letters-during-shutdown" -> "off",
+//    "akka.remote.log-sent-messages" -> "on",
+//    "akka.remote.log-received-messages" -> "on",
     "akka.actor.provider" -> "akka.remote.RemoteActorRefProvider",
     "akka.remote.netty.tcp.hostname" -> "localhost").asJava))
   // define nodes
@@ -56,7 +54,7 @@ class DoublerTest extends MultiNodeSpec(DoublerTestConfig) with ScalaTestMultiNo
 
   "a Doubler " must {
     "double input values " in {
-      (4 to 4) foreach (input ⇒ test(input))
+      (4 to 100) foreach (input ⇒ test(input))
     }
   }
 
